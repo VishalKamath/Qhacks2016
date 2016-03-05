@@ -33,24 +33,21 @@ var funnel = new Keen.Query("funnel", {
         timeframe: "this_12_months" 
       }); 
 
-  client.draw(pageviews_timeline, document.getElementById("chart-01"), {
-    chartType: "areachart",
-    title: false,
-    height: 250,
-    width: "auto",
-    chartOptions: {
-      chartArea: {
-        height: "85%",
-        left: "5%",
-        top: "5%",
-        width: "80%"
-      },
-      isStacked: true
-    }
-  });
+var revSeries = new Keen.Query('sum', {
+          eventCollection: 'stocks2',
+          timeframe: 'last_week',
+          targetProperty: 'data.object.amount',
+          interval: 'daily',
+          filters: [{
+              'property_name':'type',
+              'operator':'eq',
+              'property_value':'charge.succeeded'
+          }]
+      });
 
+  
 client.draw(funnel, document.getElementById("chart-01"), {
-    chartType: "areachart",
+    chartType: "linechart",
     title: false,
     height: 250,
     width: "auto",
@@ -76,8 +73,10 @@ client.draw(funnel, document.getElementById("chart-01"), {
       end: "2014-05-05T00:00:00.000Z"
     }
   });
-  client.draw(pageviews_static, document.getElementById("chart-02"), {
-    chartType: "piechart",
+
+  
+  client.draw(revSeries, document.getElementById("chart-02"), {
+    chartType: "linechart",
     title: false,
     height: 250,
     width: "auto",
@@ -88,7 +87,7 @@ client.draw(funnel, document.getElementById("chart-01"), {
         top: "5%",
         width: "100%"
       },
-      pieHole: .4
+      
     }
   });
 
