@@ -1,6 +1,6 @@
 var client = new Keen({
-  projectId: "5368fa5436bf5a5623000000",
-  readKey: "3f324dcb5636316d6865ab0ebbbbc725224c7f8f3e8899c7733439965d6d4a2c7f13bf7765458790bd50ec76b4361687f51cf626314585dc246bb51aeb455c0a1dd6ce77a993d9c953c5fc554d1d3530ca5d17bdc6d1333ef3d8146a990c79435bb2c7d936f259a22647a75407921056"
+  projectId: "56db010546f9a71794985bb8",
+  readKey: "ed27cd048e0b378aef5203e02ecfa1147e9bb011864fe1065a7f734f308efa4f9625f53ddf076de74fd9c73199e5688d9a16a297460859f34dd7eb1b6e59068b13176ae1cf42b2b7c1f5dd21b48e648f35f661422d308238791d6db0ead8fb88"
 });
 
 Keen.ready(function(){
@@ -9,15 +9,30 @@ Keen.ready(function(){
   // ----------------------------------------
   // Pageviews Area Chart
   // ----------------------------------------
-  var pageviews_timeline = new Keen.Query("count", {
+  var pageviews_timeline = new Keen.Query("funnel", {
     eventCollection: "pageviews",
     interval: "hourly",
-    groupBy: "user.device_info.browser.family",
+    groupBy: "price",
     timeframe: {
       start: "2014-05-04T00:00:00.000Z",
       end: "2014-05-05T00:00:00.000Z"
     }
   });
+
+var funnel = new Keen.Query("funnel", {
+  steps: [ 
+          { 
+            eventCollection: "stocks", 
+            actorProperty: "price", 
+          }, 
+          { 
+            eventCollection: "stocks2", 
+            actorProperty: "price", 
+          }
+        ],
+        timeframe: "this_12_months" 
+      }); 
+
   client.draw(pageviews_timeline, document.getElementById("chart-01"), {
     chartType: "areachart",
     title: false,
@@ -34,6 +49,21 @@ Keen.ready(function(){
     }
   });
 
+client.draw(funnel, document.getElementById("chart-01"), {
+    chartType: "areachart",
+    title: false,
+    height: 250,
+    width: "auto",
+    chartOptions: {
+      chartArea: {
+        height: "85%",
+        left: "5%",
+        top: "5%",
+        width: "80%"
+      },
+      isStacked: true
+    }
+  });
 
   // ----------------------------------------
   // Pageviews Pie Chart
