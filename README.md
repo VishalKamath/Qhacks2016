@@ -1,2 +1,1 @@
-# Qhacks2016
-See name :P
+QHACKS2016
